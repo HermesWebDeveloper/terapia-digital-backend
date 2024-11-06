@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Consulta } = require('../models/create_models');
+const { Op } = require('sequelize');
 
 router.get('/search', async (req, res) => {
     try {
@@ -10,6 +11,37 @@ router.get('/search', async (req, res) => {
         res.status(201).json(consultas);
     } catch (error) {
         console.error('Erro ao buscar consultas: ', error);
+    }
+});
+
+router.get('/filter', async (req, res) => {
+    try {
+        const dataFiltro = req.query.dataFiltro;
+
+        // Define início e fim do dia para o filtro
+        const inicioDoDia = new Date(dataFiltro);
+        inicioDoDia.setUTCHours(0, 0, 0, 0); // 00:00:00.000 UTC
+
+        const fimDoDia = new Date(dataFiltro);
+        fimDoDia.setUTCHours(23, 59, 59, 999); // 23:59:59.999 UTC
+
+        // Condição para o filtro: se `dataFiltro` estiver vazio, busca todas as consultas
+        const whereCondition = dataFiltro 
+            ? {
+                data: {
+                    [Op.between]: [
+                        new Date(`${dataFiltro}T00:00:00.000Z`),
+                        new Date(`${dataFiltro}T23:59:59.999Z`)
+                    ]
+                }
+            }
+            : {};
+
+        const consultas = await Consulta.findAll({ where: whereCondition });
+
+        res.status(201).json(consultas);
+    } catch (error) {
+        console.error('Erro ao buscar consultas pela : ', error);
     }
 });
 
@@ -42,7 +74,7 @@ router.put('/:id', async (req, res) => {
         const consulta = await Consulta.findByPk(req.params.id);
         const dados = req.body;
 
-        await consulta.update(dads);
+        await consulta.update(dados);
 
         res.json(consulta);
     } catch (error) {
