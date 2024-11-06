@@ -13,7 +13,7 @@ router.get('/search', async (req, res) => {
     }
 });
 
-router.get('/:id', async(req, res) => {
+router.get('/:id', async (req, res) => {
     try {
         const consulta = await Consulta.findByPk(req.params.id);
 
@@ -32,8 +32,33 @@ router.post('/', async (req, res) => {
         const { nome, data, retorno, qp, hda, prt } = req.body;
         const newConsulta = await Consulta.create({nome, data, retorno, qp, hda, prt});
         res.status(201).json(newConsulta);
-    } catch(error) {
+    } catch (error) {
         console.error('Erro ao criar consulta: ', error);
+    };
+});
+
+router.put('/:id', async (req, res) => {
+    try {
+        const consulta = await Consulta.findByPk(req.params.id);
+        const dados = req.body;
+
+        await consulta.update(dads);
+
+        res.json(consulta);
+    } catch (error) {
+        console.error('Erro ao atualizar consulta: ', error);
+    };
+});
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const consulta = await Consulta.findByPk(req.params.id);
+        
+        await consulta.destroy();
+
+        res.json(consulta);
+    } catch (error) {
+        console.error('Erro ao excluir consulta: ', error);
     };
 });
 
