@@ -6,7 +6,7 @@ const categoryControllers = require('../controllers/consultas');
 
 router.get('/search', categoryControllers.buscarConsultas);
 
-router.get('/filter', categoryControllers.filtrarPorData);
+router.get('/filter', categoryControllers.filtrarConsultas);
 
 router.get('/:id', categoryControllers.buscarConsultaPeloID);
 

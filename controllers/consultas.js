@@ -13,7 +13,7 @@ exports.buscarConsultas = async (req, res) => {
     }
 };
 
-exports.filtrarPorData = async (req, res) => {
+exports.filtrarConsultas = async (req, res) => {
     try {
         const dataFiltro = req.query.dataFiltro;
 
@@ -24,17 +24,20 @@ exports.filtrarPorData = async (req, res) => {
         const fimDoDia = new Date(dataFiltro);
         fimDoDia.setUTCHours(23, 59, 59, 999); // 23:59:59.999 UTC
 
-        // Condição para o filtro: se `dataFiltro` estiver vazio, busca todas as consultas
-        const whereCondition = dataFiltro 
-            ? {
+        if (dataFiltro) {
+            // Crio variável para armazenar informações de filtro da data
+            const filtroData = {
                 data: {
                     [Op.between]: [
                         new Date(`${dataFiltro}T00:00:00.000Z`),
                         new Date(`${dataFiltro}T23:59:59.999Z`)
                     ]
                 }
-            }
-            : {};
+            };
+        } else {
+            // Se dataFiltro não estiver preenchida, as informações de filtro para data são vazias
+            const filtroData = {};
+        };
 
         const consultas = await Consulta.findAll({ where: whereCondition });
 
