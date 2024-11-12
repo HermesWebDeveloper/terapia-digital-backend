@@ -9,6 +9,7 @@ exports.buscarConsultas = async (req, res) => {
         res.status(201).json(consultas);
     } catch (error) {
         console.error('Erro ao buscar consultas: ', error);
+        res.status(401).json('Erro ao buscar consultas.');
     }
 };
 
@@ -40,6 +41,7 @@ exports.filtrarPorData = async (req, res) => {
         res.status(201).json(consultas);
     } catch (error) {
         console.error('Erro ao buscar consultas pela : ', error);
+        res.status(401).json('Erro ao filtrar consultas por data.');
     }
 };
 
@@ -54,6 +56,7 @@ exports.buscarConsultaPeloID = async (req, res) => {
         res.status(201).json(consulta);
     } catch (error) {
         console.error('Erro ao buscar consulta pelo id: ', error);
+        res.status(401).json('Erro ao buscar consulta pelo id.');
     };
 };
 
@@ -64,6 +67,7 @@ exports.criarConsulta = async (req, res) => {
         res.status(201).json(newConsulta);
     } catch (error) {
         console.error('Erro ao criar consulta: ', error);
+        res.status(401).json('Erro ao criar consulta.');
     };
 };
 
@@ -77,6 +81,7 @@ exports.atualizarConsulta = async (req, res) => {
         res.json(consulta);
     } catch (error) {
         console.error('Erro ao atualizar consulta: ', error);
+        res.status(401).json("Erro ao atualizar consulta.")
     };
 };
 
@@ -86,8 +91,9 @@ exports.deletarConsulta = async (req, res) => {
         
         await consulta.destroy();
 
-        res.json(consulta);
+        res.json({"Consulta deletada: ": consulta});
     } catch (error) {
         console.error('Erro ao excluir consulta: ', error);
+        res.status(401).json("Erro ao deletar consulta.")
     };
 };
